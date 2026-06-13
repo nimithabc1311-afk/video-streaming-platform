@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamZone — Video Streaming Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand" onclick="showPage('home', null)">▶️ StreamZone</div>
+    <div class="nav-search">
+      <input type="text" id="nav-search" placeholder="🔍 Search videos..." oninput="liveSearch()" />
+    </div>
+    <div class="nav-links">
+      <button class="btn btn-nav active" onclick="showPage('home', this)">Home</button>
+      <button class="btn btn-nav" onclick="showPage('browse', this)">Browse</button>
+      <button class="btn btn-nav" onclick="showPage('saved', this)">❤️ Saved</button>
+      <button class="btn btn-nav" onclick="showPage('upload', this)">⬆️ Upload</button>
+      <button class="btn btn-nav" onclick="showPage('admin', this)">Admin</button>
+    </div>
+  </nav>
+
+  <!-- ===== HOME PAGE ===== -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Watch. Explore. Enjoy.</h1>
+        <p>Thousands of videos across Music, Sports, Education & more</p>
+        <button class="btn btn-hero" onclick="showPage('browse', null)">Start Watching</button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-icon">🎬</span><span class="stat-num" id="stat-videos">0</span><span class="stat-label">Videos</span></div>
+        <div class="stat-card"><span class="stat-icon">❤️</span><span class="stat-num" id="stat-likes">0</span><span class="stat-label">Total Likes</span></div>
+        <div class="stat-card"><span class="stat-icon">👁️</span><span class="stat-num" id="stat-views">0</span><span class="stat-label">Total Views</span></div>
+        <div class="stat-card"><span class="stat-icon">🏷️</span><span class="stat-num">6</span><span class="stat-label">Categories</span></div>
+      </div>
+      <h2 class="section-title">Browse by Category</h2>
+      <div class="cat-grid">
+        <div class="cat-pill" onclick="filterCat('Music')">🎵 Music</div>
+        <div class="cat-pill" onclick="filterCat('Sports')">⚽ Sports</div>
+        <div class="cat-pill" onclick="filterCat('Education')">📚 Education</div>
+        <div class="cat-pill" onclick="filterCat('Gaming')">🎮 Gaming</div>
+        <div class="cat-pill" onclick="filterCat('Comedy')">😂 Comedy</div>
+        <div class="cat-pill" onclick="filterCat('Technology')">💻 Technology</div>
+      </div>
+      <h2 class="section-title">🔥 Trending Now</h2>
+      <div id="trending-grid" class="video-grid"></div>
+      <h2 class="section-title">🆕 New Uploads</h2>
+      <div id="new-grid" class="video-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== BROWSE PAGE ===== -->
+  <div id="page-browse" class="page">
+    <div class="container">
+      <div class="page-header">
+        <h2 id="browse-title">All Videos</h2>
+        <div class="filter-row">
+          <select id="filter-cat" onchange="renderBrowse()">
+            <option value="all">All Categories</option>
+            <option value="Music">🎵 Music</option>
+            <option value="Sports">⚽ Sports</option>
+            <option value="Education">📚 Education</option>
+            <option value="Gaming">🎮 Gaming</option>
+            <option value="Comedy">😂 Comedy</option>
+            <option value="Technology">💻 Technology</option>
+          </select>
+          <select id="filter-sort" onchange="renderBrowse()">
+            <option value="newest">Newest First</option>
+            <option value="views">Most Viewed</option>
+            <option value="likes">Most Liked</option>
+          </select>
+        </div>
+      </div>
+      <div id="browse-grid" class="video-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== VIDEO PLAYER PAGE ===== -->
+  <div id="page-player" class="page">
+    <div class="container">
+      <button class="btn btn-back" onclick="goBack()">← Back</button>
+      <div class="player-layout">
+        <div class="player-main">
+          <div class="video-player-box">
+            <iframe id="main-video" src="" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+          </div>
+          <div class="video-info">
+            <div class="video-cat-badge" id="player-cat"></div>
+            <h2 id="player-title"></h2>
+            <div class="player-meta">
+              <span id="player-channel"></span>
+              <span id="player-date"></span>
+              <span id="player-views"></span>
+            </div>
+            <p id="player-desc" class="player-desc"></p>
+            <div class="player-actions">
+              <button class="action-btn like-btn" id="like-btn" onclick="toggleLike()">
+                <span id="like-icon">🤍</span> <span id="like-count">0</span> Likes
+              </button>
+              <button class="action-btn save-btn" id="save-btn" onclick="toggleSave()">
+                <span id="save-icon">🔖</span> Save
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="player-sidebar">
+          <h3>Up Next</h3>
+          <div id="related-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SAVED PAGE ===== -->
+  <div id="page-saved" class="page">
+    <div class="container">
+      <div class="page-header">
+        <h2>❤️ Saved Videos</h2>
+        <button class="btn btn-danger-outline" onclick="clearSaved()">🗑 Clear All</button>
+      </div>
+      <div id="saved-grid" class="video-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== UPLOAD PAGE ===== -->
+  <div id="page-upload" class="page">
+    <div class="container">
+      <div class="form-card">
+        <h2>⬆️ Upload a Video</h2>
+        <div id="upload-error"   class="error-msg"   style="display:none"></div>
+        <div id="upload-success" class="success-msg" style="display:none"></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Video Title</label>
+            <input type="text" id="up-title" placeholder="Enter video title" />
+          </div>
+          <div class="form-group">
+            <label>Channel / Creator Name</label>
+            <input type="text" id="up-channel" placeholder="Your channel name" />
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="up-category">
+              <option value="Music">🎵 Music</option>
+              <option value="Sports">⚽ Sports</option>
+              <option value="Education">📚 Education</option>
+              <option value="Gaming">🎮 Gaming</option>
+              <option value="Comedy">😂 Comedy</option>
+              <option value="Technology">💻 Technology</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>YouTube Video ID (e.g. dQw4w9WgXcQ)</label>
+            <input type="text" id="up-url" placeholder="YouTube video ID" />
+          </div>
+          <div class="form-group">
+            <label>Duration (e.g. 10:25)</label>
+            <input type="text" id="up-duration" placeholder="MM:SS" />
+          </div>
+          <div class="form-group">
+            <label>Tags (comma separated)</label>
+            <input type="text" id="up-tags" placeholder="e.g. music, live, concert" />
+          </div>
+        </div>
+        <div class="form-group full-width">
+          <label>Description</label>
+          <textarea id="up-desc" rows="4" placeholder="Describe your video..."></textarea>
+        </div>
+        <button class="btn btn-primary up-btn" onclick="uploadVideo()">⬆️ Upload Video</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN PAGE ===== -->
+  <div id="page-admin" class="page">
+    <div class="container">
+      <h2 class="section-title">🔧 Admin Dashboard</h2>
+      <div class="admin-stats">
+        <div class="admin-stat"><span id="a-videos">0</span><label>Total Videos</label></div>
+        <div class="admin-stat"><span id="a-views">0</span><label>Total Views</label></div>
+        <div class="admin-stat"><span id="a-likes">0</span><label>Total Likes</label></div>
+        <div class="admin-stat"><span id="a-saved">0</span><label>Saved Videos</label></div>
+      </div>
+      <h3 style="margin:28px 0 16px;color:#0f172a;">All Videos</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Title</th><th>Channel</th><th>Category</th><th>Views</th><th>Likes</th><th>Duration</th><th>Action</th></tr>
+          </thead>
+          <tbody id="admin-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Designed & Built by <strong>Nimitha BC</strong> • StreamZone Video Streaming Platform</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
