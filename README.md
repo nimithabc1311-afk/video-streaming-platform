@@ -66,6 +66,7 @@ video-streaming/
 ---
 
 ## 📸 Pages
+<img width="1920" height="915" alt="vedio" src="https://github.com/user-attachments/assets/f7896177-2124-45f1-9730-5f8cff9a478e" />
 
 - **Home** — Hero banner, stats, category pills, trending & new videos
 - **Browse** — All videos with category filter and sort options
